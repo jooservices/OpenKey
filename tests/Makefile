@@ -15,7 +15,10 @@ ENGINE_SRCS := $(ENGINE_DIR)/Engine.cpp \
 TEST_SRCS   := $(wildcard engine/*.cpp)
 
 CXX      := clang++
-CXXFLAGS := -std=c++17 -O0 -g --coverage -Wall -Wno-deprecated-declarations
+# -include algorithm: ConvertTool.cpp uses std::find but only includes it
+# transitively via <iostream> on libc++ (macOS). Linux libstdc++ does not,
+# so force the include at build level without touching engine sources.
+CXXFLAGS := -std=c++17 -O0 -g --coverage -Wall -Wno-deprecated-declarations -include algorithm
 INCLUDES := -I$(ENGINE_DIR) -I$(HARNESS_DIR)
 
 BIN := $(BUILD_DIR)/ut_engine
