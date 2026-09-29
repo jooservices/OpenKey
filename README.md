@@ -2,9 +2,16 @@
 # [OpenKey](http://open-key.org)
 ### [Download bản mới nhất](https://github.com/tuyenvm/OpenKey/releases)
 [![GitHub release](https://img.shields.io/github/v/release/tuyenvm/OpenKey.svg)](https://github.com/tuyenvm/OpenKey/releases/latest)
+[![CI](https://github.com/jooservices/OpenKey/actions/workflows/ci.yml/badge.svg)](https://github.com/jooservices/OpenKey/actions/workflows/ci.yml)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/jooservices/OpenKey/badge)](https://securityscorecards.dev/viewer/?uri=github.com/jooservices/OpenKey)
 
 ### Open source Vietnamese Input App for macOS - Bộ gõ tiếng Việt nguồn mở cho macOS.
 Bộ gõ tiếng Việt mới cho macOS, sử dụng kỹ thuật `Backspace`. Loại bỏ lỗi gạch chân khó chịu ở bộ gõ mặc định. Hoàn toàn miễn phí và là nguồn mở, luôn cập nhật và phát triển.
+
+> **Fork note:** This is a JOOservices fork for reference. The engine C++
+> core is unit-tested with an 85% line-coverage floor (`tests/`, see
+> [`UT_PLAN.md`](UT_PLAN.md)); CI, commit lint, CodeQL and Scorecard run on
+> GitHub Actions ([`WORKFLOWS.md`](WORKFLOWS.md)).
 
 ### Mã nguồn của ứng dụng được mở công khai, minh bạch dưới giấy phép GPL. Điều này nghĩa là bạn hoàn toàn có thể tải mã nguồn về tự build, cải tiến theo mục đích của bạn. Nếu bạn tái phân phối bản cải tiến của bạn, thì nó cũng phải là mã nguồn mở và thông báo bản gốc là OpenKey.
 

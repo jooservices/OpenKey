@@ -1,0 +1,62 @@
+# Dedicated CI for jooservices/OpenKey — GitHub-hosted runners.
+# Builds and runs the engine unit tests with a coverage floor (85%).
+name: CI
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Engine unit tests + coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Install toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends clang
+
+      - name: Run engine tests with coverage floor
+        run: |
+          clang --version | head -1
+          tests/ci.sh
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-report
+          path: tests/coverage_report.txt
+          if-no-files-found: ignore
+
+  aggregate:
+    name: CI gate
+    needs: [test]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: ${{ !cancelled() }}
+    steps:
+      - name: Aggregate CI result
+        run: |
+          for result in "${{ needs.test.result }}"; do
+            if [ "${result}" != "success" ]; then
+              echo "CI failed: one or more required jobs did not succeed"
+              exit 1
+            fi
+          done
+          echo "CI passed"
