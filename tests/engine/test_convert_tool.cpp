@@ -5,18 +5,19 @@
 #include "TestHarness.h"
 #include "engine_fixture.h"
 #include "ConvertTool.h"
+#include <iomanip>
+#include <sstream>
 
 using namespace enginetest;
 
 // helper: compare convertUtil output to expected UTF-8 hex bytes
 static bool convertsTo(const std::string& input, const char* expectedHex) {
     std::string out = convertUtil(input);
-    char buf[512];
-    int n = 0;
+    std::ostringstream os;
+    os << std::hex << std::uppercase << std::setfill('0');
     for (unsigned char c : out)
-        n += snprintf(buf + n, sizeof(buf) - n, "%02X ", c);
-    buf[n] = 0;
-    return std::string(buf) == std::string(expectedHex);
+        os << std::setw(2) << (int)c << ' ';
+    return os.str() == std::string(expectedHex);
 }
 
 // Unicode -> TCVN3 (1-byte)
