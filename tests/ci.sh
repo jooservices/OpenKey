@@ -30,8 +30,18 @@ REPORT="coverage_report.txt"
 
 total_exec=0
 total_lines=0
+# Prefer llvm-cov gcov (same toolchain family as clang --coverage) so the
+# clang-18 gcov format on Linux parses correctly; fall back to gcc gcov.
+if command -v llvm-cov >/dev/null 2>&1; then
+  GCOV="llvm-cov gcov"
+elif command -v llvm-cov-18 >/dev/null 2>&1; then
+  GCOV="llvm-cov-18 gcov"
+else
+  GCOV="gcov"
+fi
+echo "using: ${GCOV}"
 for o in ${FILES}; do
-  line=$(cd "${BUILD_DIR}" && gcov -o "./ut_engine-${o}.gcno" "${ENGINE_DIR}/${o}.cpp" 2>/dev/null \
+  line=$(cd "${BUILD_DIR}" && ${GCOV} -o "./ut_engine-${o}.gcno" "${ENGINE_DIR}/${o}.cpp" 2>/dev/null \
     | grep -A1 "File '.*/${o}.cpp'" | grep "Lines executed")
   # gcov prints e.g. "Lines executed:82.54% of 1128"
   pct=$(printf '%s' "${line}" | sed -n 's/.*executed:\([0-9.]*\)%.*/\1/p')
